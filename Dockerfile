@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     wget \
     unzip \
+    netcat-openbsd \
     openjdk-17-jdk \
     python3 \
     python3-pip \

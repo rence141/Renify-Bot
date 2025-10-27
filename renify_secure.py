@@ -119,7 +119,7 @@ class RenifyBot(commands.Bot):
             )
             
             self.wavelink = await wavelink.Pool.connect(client=self, nodes=[node])
-            self.wavelink.listen(wavelink.TrackStartEvent, self.on_wavelink_track_start)
+            self.wavelink.listen(wavelink.TrackStart, self.on_wavelink_track_start)
             self.wavelink.listen(wavelink.TrackEndEvent, self.on_wavelink_track_end)
 
             logger.info(f'🎵 Wavelink node connected: {node.identifier}')
@@ -127,7 +127,7 @@ class RenifyBot(commands.Bot):
         except Exception as e:
             logger.error(f'❌ Failed to connect to Lavalink: {e}', exc_info=True)
 
-    async def on_wavelink_track_start(self, event: wavelink.TrackStartEvent):
+    async def on_wavelink_track_start(self, event: wavelink.TrackStart):
         player = event.player
         track = event.track
         channel = player.home_channel

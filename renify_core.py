@@ -130,7 +130,7 @@ class RenifyBot(commands.Bot):
             self.wavelink = await wavelink.Pool.connect(client=self, nodes=[node])
             
             # Bind the event listener for when tracks end
-            self.wavelink.listen(wavelink.TrackStartEvent, self.on_wavelink_track_start)
+            self.wavelink.listen(wavelink.TrackStart, self.on_wavelink_track_start)
             self.wavelink.listen(wavelink.TrackEndEvent, self.on_wavelink_track_end)
 
             logger.info(f'🎵 Wavelink node connected: {node.identifier}')
@@ -141,7 +141,7 @@ class RenifyBot(commands.Bot):
             print(f'❌ Failed to connect to Lavalink: {e}')
 
     
-    async def on_wavelink_track_start(self, event: wavelink.TrackStartEvent):
+    async def on_wavelink_track_start(self, event: wavelink.TrackStart):
         """Event handler for when a track starts playing."""
         player = event.player
         track = event.track

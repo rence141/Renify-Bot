@@ -145,7 +145,7 @@ class RenifyBot(commands.Bot):
             
             # Register event listeners after connection is established
             if self.get_cog('MusicCog'):
-                self.wavelink.listen(wavelink.TrackStartEvent, self.get_cog('MusicCog').on_wavelink_track_start)
+                self.wavelink.listen(wavelink.TrackStart, self.get_cog('MusicCog').on_wavelink_track_start)
                 self.wavelink.listen(wavelink.TrackEndEvent, self.get_cog('MusicCog').on_wavelink_track_end)
             
             logger.info(f'🎵 Wavelink node connected: {node.identifier}')
@@ -318,7 +318,7 @@ class MusicCog(commands.Cog):
         
     # --- Wavelink Events (Modified) ---
 
-    async def on_wavelink_track_start(self, event: wavelink.TrackStartEvent):
+    async def on_wavelink_track_start(self, event: wavelink.TrackStart):
         """Event handler for when a track starts playing."""
         player: RenifyPlayer = event.player
         track = event.track
