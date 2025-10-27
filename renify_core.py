@@ -5,6 +5,7 @@ from discord.ext import commands
 from collections import defaultdict
 from time import time
 import logging
+import asyncio
 
 # Configure logging
 logging.basicConfig(
@@ -124,27 +125,44 @@ class RenifyBot(commands.Bot):
 
 
     async def setup_wavelink(self):
-        """Connects the bot to the Lavalink server."""
-        try:
-            # Create a Wavelink node object
-            node = wavelink.Node(
-                uri=f'http://{LAVALINK_HOST}:{LAVALINK_PORT}',
-                password=LAVALINK_PASSWORD
-            )
-            
-            # Connect the node to the bot
-            self.wavelink = await wavelink.Pool.connect(client=self, nodes=[node])
-            
-            # Bind the event listener for when tracks end
-            # Note: Event listeners are handled differently in newer Wavelink versions
-            # We'll handle track events through the player directly
+        """Connects the bot to the Lavalink server with retry logic."""
+        max_retries = 5
+        retry_delay = 10
+        
+        for attempt in range(max_retries):
+            try:
+                logger.info(f'Attempting to connect to Lavalink (attempt {attempt + 1}/{max_retries})...')
+                print(f'Attempting to connect to Lavalink (attempt {attempt + 1}/{max_retries})...')
+                
+                # Create a Wavelink node object
+                node = wavelink.Node(
+                    uri=f'http://{LAVALINK_HOST}:{LAVALINK_PORT}',
+                    password=LAVALINK_PASSWORD
+                )
+                
+                # Connect the node to the bot
+                self.wavelink = await wavelink.Pool.connect(client=self, nodes=[node])
+                
+                # Bind the event listener for when tracks end
+                # Note: Event listeners are handled differently in newer Wavelink versions
+                # We'll handle track events through the player directly
 
-            logger.info(f'🎵 Wavelink node connected: {node.identifier}')
-            print(f'🎵 Wavelink node connected: {node.identifier}')
-
-        except Exception as e:
-            logger.error(f'❌ Failed to connect to Lavalink: {e}', exc_info=True)
-            print(f'❌ Failed to connect to Lavalink: {e}')
+                logger.info(f'🎵 Wavelink node connected: {node.identifier}')
+                print(f'🎵 Wavelink node connected: {node.identifier}')
+                return  # Success, exit the retry loop
+                
+            except Exception as e:
+                logger.warning(f'❌ Failed to connect to Lavalink (attempt {attempt + 1}/{max_retries}): {e}')
+                print(f'❌ Failed to connect to Lavalink (attempt {attempt + 1}/{max_retries}): {e}')
+                
+                if attempt < max_retries - 1:
+                    logger.info(f'Retrying in {retry_delay} seconds...')
+                    print(f'Retrying in {retry_delay} seconds...')
+                    await asyncio.sleep(retry_delay)
+                else:
+                    logger.error(f'❌ Failed to connect to Lavalink after {max_retries} attempts', exc_info=True)
+                    print(f'❌ Failed to connect to Lavalink after {max_retries} attempts')
+                    raise
 
     
     # Note: Track event handling is now done through the player directly

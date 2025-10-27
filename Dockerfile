@@ -35,19 +35,31 @@ COPY application.yml .
 # Create startup script
 RUN echo '#!/bin/bash\n\
 # Start Lavalink in background\n\
+echo "Starting Lavalink..."\n\
 java -jar Lavalink.jar &\n\
 LAVALINK_PID=$!\n\
 echo "Lavalink started with PID: $LAVALINK_PID"\n\
 \n\
-# Wait for Lavalink to be ready\n\
+# Wait for Lavalink to be ready with more time and better checking\n\
 echo "Waiting for Lavalink to start..."\n\
-for i in {1..30}; do\n\
+for i in {1..60}; do\n\
     if nc -z localhost 2333; then\n\
-        echo "Lavalink is ready!"\n\
+        echo "Lavalink is ready on port 2333!"\n\
+        # Give it a moment to fully initialize\n\
+        sleep 3\n\
         break\n\
     fi\n\
+    echo "Attempt $i/60: Lavalink not ready yet..."\n\
     sleep 2\n\
 done\n\
+\n\
+# Check if Lavalink is actually running\n\
+if ! nc -z localhost 2333; then\n\
+    echo "ERROR: Lavalink failed to start on port 2333!"\n\
+    echo "Lavalink process status:"\n\
+    ps aux | grep java\n\
+    exit 1\n\
+fi\n\
 \n\
 # Start the Python bot\n\
 echo "Starting Renify bot..."\n\
