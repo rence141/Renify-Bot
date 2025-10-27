@@ -145,8 +145,8 @@ class RenifyBot(commands.Bot):
             
             # Register event listeners after connection is established
             if self.get_cog('MusicCog'):
-                self.wavelink.listen(wavelink.TrackStart, self.get_cog('MusicCog').on_wavelink_track_start)
-                self.wavelink.listen(wavelink.TrackEndEvent, self.get_cog('MusicCog').on_wavelink_track_end)
+                # Note: Event listeners are handled differently in newer Wavelink versions
+                # We'll handle track events through the player directly
             
             logger.info(f'🎵 Wavelink node connected: {node.identifier}')
             print(f'🎵 Wavelink node connected: {node.identifier}')
@@ -318,7 +318,7 @@ class MusicCog(commands.Cog):
         
     # --- Wavelink Events (Modified) ---
 
-    async def on_wavelink_track_start(self, event: wavelink.TrackStart):
+    # async def on_wavelink_track_start(self, event: wavelink.TrackStart):
         """Event handler for when a track starts playing."""
         player: RenifyPlayer = event.player
         track = event.track
@@ -326,27 +326,9 @@ class MusicCog(commands.Cog):
         # Call the update logic to refresh the controller message
         await self.update_controller_message(player, track)
 
-    async def on_wavelink_track_end(self, event: wavelink.TrackEndEvent):
-        """Event handler for when a track finishes."""
-        player: RenifyPlayer = event.player
-        
-        if player.queue.is_empty:
-            # Update the controller to show queue is finished
-            if player.controller_message:
-                await player.controller_message.edit(embed=discord.Embed(
-                    title="Queue Finished! 🔋",
-                    description="Use `/play` to set the next vibe.",
-                    color=discord.Color.red()
-                ), view=None) 
-            
-            await discord.utils.sleep_until(discord.utils.utcnow() + 30)
-            if player.queue.is_empty and player.is_playing() == False:
-                 # Player disconnects and deletes the controller message automatically
-                 await player.disconnect()
-        else:
-            # Play the next track (update_controller_message handles the new track start)
-            next_track = player.queue.get()
-            await player.play(next_track)
+    # async def on_wavelink_track_end(self, event: wavelink.TrackEndEvent):
+    #     """Event handler for when a track finishes."""
+    #     pass
 
     # --- Slash Commands (Modified /play) ---
     

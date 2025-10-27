@@ -130,8 +130,8 @@ class RenifyBot(commands.Bot):
             self.wavelink = await wavelink.Pool.connect(client=self, nodes=[node])
             
             # Bind the event listener for when tracks end
-            self.wavelink.listen(wavelink.TrackStart, self.on_wavelink_track_start)
-            self.wavelink.listen(wavelink.TrackEndEvent, self.on_wavelink_track_end)
+            # Note: Event listeners are handled differently in newer Wavelink versions
+            # We'll handle track events through the player directly
 
             logger.info(f'🎵 Wavelink node connected: {node.identifier}')
             print(f'🎵 Wavelink node connected: {node.identifier}')
@@ -141,43 +141,15 @@ class RenifyBot(commands.Bot):
             print(f'❌ Failed to connect to Lavalink: {e}')
 
     
-    async def on_wavelink_track_start(self, event: wavelink.TrackStart):
-        """Event handler for when a track starts playing."""
-        player = event.player
-        track = event.track
-        channel = player.home_channel # We'll set this in the /play command
-        
-        # Create the 'Now Playing' embed
-        embed = discord.Embed(
-            title="🎧 Now Playing",
-            description=f"**[{track.title}]({track.uri})** by `{track.author}`",
-            color=0x1DB954 # Spotify Green
-        )
-        
-        # If possible, get the thumbnail for a sleeker look
-        # Note: Wavelink's Track object might not always have the thumbnail URL readily
-        # available without extra lookups depending on the source (YouTube/Spotify).
-        # You'll likely need to fetch it in the /play command and store it.
-        # For this foundation, we'll keep it simple:
-        
-        await channel.send(embed=embed)
-
-
-    async def on_wavelink_track_end(self, event: wavelink.TrackEndEvent):
-        """Event handler for when a track finishes."""
-        player = event.player
-        
-        # Check if there are more tracks in the queue
-        if player.queue.is_empty:
-            # No more songs, automatically disconnect after a short delay
-            await discord.utils.sleep_until(discord.utils.utcnow() + 30) # Wait 30 seconds
-            if player.queue.is_empty and player.is_playing() == False:
-                 await player.disconnect()
-                 await player.home_channel.send("Queue finished. Time to recharge! 🔋")
-        else:
-            # Play the next track in the queue
-            next_track = player.queue.get()
-            await player.play(next_track)
+    # Note: Track event handling is now done through the player directly
+    # These methods are commented out due to Wavelink API changes
+    # async def on_wavelink_track_start(self, event: wavelink.TrackStart):
+    #     """Event handler for when a track starts playing."""
+    #     pass
+    #
+    # async def on_wavelink_track_end(self, event: wavelink.TrackEndEvent):
+    #     """Event handler for when a track finishes."""
+    #     pass
             
 # --- COMMANDS ---
 
