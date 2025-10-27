@@ -14,8 +14,11 @@ Lavalinkmd/
 .dockerignore
 *.bat
 start_*.bat
-*.txt
 QUICK_START.txt
+START_NOW.txt
+FINAL_STATUS.md
+HELP_COMMAND_ADDED.md
+BOT_READY.md
 *.db
 *.sqlite
 venv/
