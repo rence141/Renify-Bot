@@ -1,0 +1,39 @@
+services:
+  # Lavalink Service
+  lavalink:
+    name: renify-lavalink
+    env: docker
+    plan: free
+    region: oregon
+    dockerfilePath: Dockerfile
+    dockerContext: .
+    dockerCommand: java -jar Lavalink.jar
+    healthCheckPath: /
+    envVars:
+      - key: LAVALINK_HOST
+        value: 0.0.0.0
+      - key: LAVALINK_PORT
+        value: 2333
+      - key: LAVALINK_PASSWORD
+        value: renifythoushallnotpass
+    
+  # Bot Service
+  bot:
+    name: renify-bot
+    env: docker
+    plan: free
+    region: oregon
+    dockerfilePath: Dockerfile.bot
+    dockerContext: .
+    envVars:
+      - key: DISCORD_TOKEN
+        sync: false
+      - key: LAVALINK_HOST
+        fromService:
+          name: renify-lavalink
+          type: host
+      - key: LAVALINK_PORT
+        value: 2333
+      - key: LAVALINK_PASSWORD
+        value: renifythoushallnotpass
+

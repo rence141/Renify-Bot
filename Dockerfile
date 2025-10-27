@@ -1,0 +1,65 @@
+# Multi-stage Dockerfile for Renify Bot with Lavalink
+FROM ubuntu:22.04
+
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive
+ENV JAVA_VERSION=17
+ENV PYTHONUNBUFFERED=1
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    wget \
+    unzip \
+    openjdk-17-jdk \
+    python3 \
+    python3-pip \
+    python3-venv \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+# Download Lavalink
+RUN wget -q https://github.com/lavalink-devs/Lavalink/releases/latest/download/Lavalink.jar -O Lavalink.jar
+
+# Copy application files
+COPY renify_core.py .
+COPY renify_lavalink/application.yml .
+
+# Create startup script
+RUN echo '#!/bin/bash\n\
+# Start Lavalink in background\n\
+java -jar Lavalink.jar &\n\
+LAVALINK_PID=$!\n\
+echo "Lavalink started with PID: $LAVALINK_PID"\n\
+\n\
+# Wait for Lavalink to be ready\n\
+echo "Waiting for Lavalink to start..."\n\
+for i in {1..30}; do\n\
+    if nc -z localhost 2333; then\n\
+        echo "Lavalink is ready!"\n\
+        break\n\
+    fi\n\
+    sleep 2\n\
+done\n\
+\n\
+# Start the Python bot\n\
+echo "Starting Renify bot..."\n\
+exec python3 renify_core.py\n\
+' > /app/start.sh && chmod +x /app/start.sh
+
+# Expose ports
+EXPOSE 2333
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD nc -z localhost 2333 || exit 1
+
+# Start both services
+CMD ["/app/start.sh"]
+

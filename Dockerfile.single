@@ -1,0 +1,68 @@
+# Single Dockerfile that runs both Lavalink and Bot together
+# Use this if you want one container for everything on Render
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    wget \
+    unzip \
+    openjdk-17-jdk \
+    python3 \
+    python3-pip \
+    netcat-traditional \
+    supervisor \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+# Download Lavalink
+RUN wget -q https://github.com/lavalink-devs/Lavalink/releases/latest/download/Lavalink.jar -O Lavalink.jar
+
+# Copy bot files
+COPY renify_core.py .
+COPY renify_controller.py .
+COPY renify_secure.py .
+
+# Copy application config
+COPY renify_lavalink/application.yml .
+
+# Setup Supervisor
+RUN echo '[supervisord]\n\
+nodaemon=true\n\
+user=root\n\
+\n\
+[program:lavalink]\n\
+command=/usr/bin/java -jar /app/Lavalink.jar\n\
+directory=/app\n\
+autostart=true\n\
+autorestart=true\n\
+stderr_logfile=/var/log/lavalink.err.log\n\
+stdout_logfile=/var/log/lavalink.out.log\n\
+\n\
+[program:bot]\n\
+command=/usr/bin/python3 /app/renify_core.py\n\
+directory=/app\n\
+autostart=true\n\
+autorestart=true\n\
+stderr_logfile=/var/log/bot.err.log\n\
+stdout_logfile=/var/log/bot.out.log\n\
+environment=LAVALINK_HOST="localhost",LAVALINK_PORT="2333"\n\
+' > /etc/supervisor/conf.d/renify.conf
+
+EXPOSE 2333
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD nc -z localhost 2333 || exit 1
+
+# Start both services
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/renify.conf"]
+

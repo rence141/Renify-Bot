@@ -1,0 +1,170 @@
+# Sensitive Information - NEVER COMMIT THESE!
+.env
+.env.local
+.env.*.local
+*.log
+renify_bot.log
+lavalink.log
+
+# Discord Bot Tokens and Secrets
+*_token.txt
+*_token.env
+secrets.py
+config.py
+tokens.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+pip-log.txt
+pip-delete-this-directory.txt
+toxd.ini
+.pytest_cache/
+*.pyc
+*.pyo
+
+# Virtual Environments
+venv/
+ENV/
+env/
+virtualenv/
+.venv
+venv.bak/
+env.bak/
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.project
+.pydevproject
+.settings/
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+*.bak
+*.tmp
+
+# Lavalink
+Lavalink.jar
+renify_lavalink/Lavalink.jar
+lavalink/*
+*.jar
+
+# Database Files
+*.db
+*.sqlite
+*.sqlite3
+database.db
+users.db
+
+# Logs and Temporary Files
+logs/
+*.log.*
+temp/
+tmp/
+*.tmp
+
+# Node modules (if using any JS tools)
+node_modules/
+npm-debug.log*
+
+# Backup Files
+*.bak
+*~
+*.old
+backup/
+
+# Environment Files
+.envrc
+.terraform/
+
+# Sensitive Configuration
+config.local.py
+secrets.local.json
+*token*
+*password*.txt
+*secret*.txt
+
+# Windows specific
+ntuser.dat
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN
+
+# Linux specific
+*~
+
+# macOS specific
+.AppleDouble
+.LSOverride
+.AppleSystem
+.DocumentRevisions-V100
+.fseventsd
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.Spotlight-V100
+
+# Coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# PyCharm
+.idea/
+
+# User-specific files (add your own patterns)
+user_tiers.db
+subscription_data.json
+payment_info.json
+
+# Test files
+test_*.py
+*_test.py
+tests/
+.pytest_cache/
+

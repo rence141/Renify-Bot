@@ -1,0 +1,55 @@
+lavalink:
+  server:
+    port: 2333
+    address: 0.0.0.0
+    password: "renifythoushallnotpass"
+    sources:
+      youtube: true
+      bandcamp: true
+      soundcloud: true
+      twitch: true
+      vimeo: true
+      http: true
+    
+    bufferDurationMs: 400
+    frameBufferDurationMs: 5000
+    opusEncodingQuality: 10
+    resamplingQuality: LOW
+    trackStuckThresholdMs: 10000
+    
+    playerUpdateInterval: 5
+    useSeekGhosting: true
+    
+    youtubePlaylistLoadLimit: 6
+    youtubeSearchEnabled: true
+    soundcloudSearchEnabled: true
+    gc-warnings: true
+    
+    plugins:
+      # No additional plugins configured
+      
+    filters:
+      volume:
+        maxVolume: 2.0
+      distortion:
+        scale: 0.0
+      lowpass:
+        smoothing: 20.0
+      rotation:
+        rotationHz: 0.0
+      tremolo:
+        depth: 0.5
+        frequency: 2.0
+      vibrato:
+        depth: 0.5
+        frequency: 2.0
+      karaoke:
+        level: 0.0
+        monoLevel: 0.0
+        filterBand: 220.0
+        filterWidth: 100.0
+      timescale:
+        speed: 1.0
+        pitch: 1.0
+        rate: 1.0
+

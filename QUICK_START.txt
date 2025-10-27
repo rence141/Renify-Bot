@@ -1,0 +1,69 @@
+═══════════════════════════════════════════════════════════════
+  RENIFY MUSIC BOT - QUICK START GUIDE
+═══════════════════════════════════════════════════════════════
+
+📋 WHAT YOU HAVE READY:
+  ✅ Bot code (renify_core.py & renify_controller.py)
+  ✅ Lavalink.jar downloaded
+  ✅ Configuration files ready
+  ✅ Java 21 installed
+
+🚀 HOW TO START YOUR BOT:
+
+  STEP 1: Start Lavalink Server
+  ──────────────────────────────
+  Option A: Double-click "start_lavalink.bat"
+  Option B: In PowerShell, run:
+            cd renify_lavalink
+            java -jar Lavalink.jar
+  
+  You should see:
+  [main] INFO lavalink.server.io.SocketContext - Socket server listening...
+  [main] INFO lavalink.server.LavalinkServer - Lavalink server started.
+  
+  ⚠️ KEEP THIS WINDOW OPEN!
+
+
+  STEP 2: Install Dependencies (one-time)
+  ────────────────────────────────────────
+  In a NEW terminal:
+  pip install -r requirements.txt
+
+
+  STEP 3: Set Your Discord Bot Token
+  ───────────────────────────────────
+  In PowerShell:
+  $env:DISCORD_TOKEN="YOUR_BOT_TOKEN_HERE"
+  
+  Or create a .env file with:
+  DISCORD_TOKEN=YOUR_BOT_TOKEN_HERE
+
+
+  STEP 4: Run Your Bot
+  ─────────────────────
+  Option A: Double-click "start_bot.bat"
+  Option B: In PowerShell:
+            python renify_core.py
+
+═══════════════════════════════════════════════════════════════
+📝 AVAILABLE BOT COMMANDS:
+═══════════════════════════════════════════════════════════════
+
+  /play <song name>     - Play music or add to queue
+  /skip                 - Skip current track
+  /pause                - Pause the music
+  /resume               - Resume paused music
+  /stop                 - Stop music and disconnect
+  /queue                - Show current queue
+  /controller            - Interactive controller (renify_controller.py only)
+
+═══════════════════════════════════════════════════════════════
+⚙️ CONFIGURATION:
+═══════════════════════════════════════════════════════════════
+
+  Lavalink Host:        localhost
+  Lavalink Port:        2333
+  Lavalink Password:    renifythoushallnotpass
+
+═══════════════════════════════════════════════════════════════
+
