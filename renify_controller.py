@@ -99,7 +99,7 @@ class RenifyBot(commands.Bot):
     def __init__(self):
         # Intents are required for Discord to allow your bot to see certain events
         intents = discord.Intents.default()
-        intents.message_content = True  # Required for text commands
+        # intents.message_content = True  # Commented out to avoid privileged intents error
         
         # Use a music-themed activity
         activity = discord.Activity(

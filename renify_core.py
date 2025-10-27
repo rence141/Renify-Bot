@@ -82,9 +82,10 @@ class RenifyBot(commands.Bot):
     Handles Wavelink connection and core commands.
     """
     def __init__(self):
-        # Intents are required for Discord to allow your bot to see certain events
+        # Use minimal intents to avoid privileged intents requirement
         intents = discord.Intents.default()
-        intents.message_content = True  # Required for text commands (mentions/NLP later)
+        # Only enable message_content if we actually need it
+        # intents.message_content = True  # Commented out to avoid privileged intents error
         
         # Use a music-themed activity
         activity = discord.Activity(
@@ -477,7 +478,18 @@ async def main():
         print("!!! WARNING: You need to set your DISCORD_TOKEN in the script or environment variables. !!!")
         print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     else:
-        await bot.start(DISCORD_TOKEN)
+        try:
+            await bot.start(DISCORD_TOKEN)
+        except discord.errors.PrivilegedIntentsRequired as e:
+            logger.error(f"Privileged intents error: {e}")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!! ERROR: Bot requires privileged intents that are not enabled! !!!")
+            print("!!! Go to https://discord.com/developers/applications/ !!!")
+            print("!!! Enable 'Message Content Intent' in your bot settings !!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        except Exception as e:
+            logger.error(f"Failed to start bot: {e}")
+            print(f"Failed to start bot: {e}")
 
 if __name__ == "__main__":
     # Use asyncio.run for a cleaner shutdown

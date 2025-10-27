@@ -87,7 +87,7 @@ class RenifyPlayer(wavelink.Player):
 class RenifyBot(commands.Bot):
     def __init__(self):
         intents = discord.Intents.default()
-        intents.message_content = True
+        # intents.message_content = True  # Commented out to avoid privileged intents error
         
         activity = discord.Activity(
             type=discord.ActivityType.listening, 
