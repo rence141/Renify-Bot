@@ -112,10 +112,15 @@ class RenifyBot(commands.Bot):
         await self.setup_wavelink()
         
         # 2. Sync Application Commands (Slash Commands)
-        await self.tree.sync()
-        logger.info('✅ Slash commands synced successfully.')
-        print('✅ Slash commands synced successfully.')
-        print('--------------------------------------')
+        try:
+            synced = await self.tree.sync()
+            logger.info(f'✅ Slash commands synced successfully. {len(synced)} commands registered.')
+            print(f'✅ Slash commands synced successfully. {len(synced)} commands registered.')
+            print('--------------------------------------')
+        except Exception as e:
+            logger.error(f'❌ Failed to sync slash commands: {e}')
+            print(f'❌ Failed to sync slash commands: {e}')
+            print('--------------------------------------')
 
 
     async def setup_wavelink(self):
@@ -373,6 +378,22 @@ class MusicCog(commands.Cog):
         await player.disconnect()
         
         await interaction.response.send_message("⏹️ Music stopped and queue cleared. Thanks for letting me handle the vibe!")
+
+    @discord.app_commands.command(name="sync", description="Sync slash commands with Discord (Admin only).")
+    @discord.app_commands.default_permissions(administrator=True)
+    async def sync_commands(self, interaction: discord.Interaction):
+        """Sync slash commands with Discord."""
+        try:
+            synced = await self.tree.sync()
+            await interaction.response.send_message(
+                f"✅ Successfully synced {len(synced)} slash commands!", 
+                ephemeral=True
+            )
+        except Exception as e:
+            await interaction.response.send_message(
+                f"❌ Failed to sync commands: {str(e)}", 
+                ephemeral=True
+            )
 
     @discord.app_commands.command(name="help", description="Shows a helpful guide for using Renify Bot.")
     async def help_command(self, interaction: discord.Interaction):

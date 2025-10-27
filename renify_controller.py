@@ -439,6 +439,22 @@ class MusicCog(commands.Cog):
             if not player.controller_message:
                  await self.controller_command(interaction)
 
+    @discord.app_commands.command(name="sync", description="Sync slash commands with Discord (Admin only).")
+    @discord.app_commands.default_permissions(administrator=True)
+    async def sync_commands(self, interaction: discord.Interaction):
+        """Sync slash commands with Discord."""
+        try:
+            synced = await self.bot.tree.sync()
+            await interaction.response.send_message(
+                f"✅ Successfully synced {len(synced)} slash commands!", 
+                ephemeral=True
+            )
+        except Exception as e:
+            await interaction.response.send_message(
+                f"❌ Failed to sync commands: {str(e)}", 
+                ephemeral=True
+            )
+
     @discord.app_commands.command(name="help", description="Shows a helpful guide for using Renify Bot.")
     async def help_command(self, interaction: discord.Interaction):
         """Shows help information for first-time users."""
