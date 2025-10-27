@@ -32,7 +32,7 @@ COPY renify_controller.py .
 COPY renify_secure.py .
 
 # Copy application config
-COPY renify_lavalink/application.yml .
+COPY application.yml .
 
 # Setup Supervisor
 RUN echo '[supervisord]\n\

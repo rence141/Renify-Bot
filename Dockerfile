@@ -29,7 +29,7 @@ RUN wget -q https://github.com/lavalink-devs/Lavalink/releases/latest/download/L
 
 # Copy application files
 COPY renify_core.py .
-COPY renify_lavalink/application.yml .
+COPY application.yml .
 
 # Create startup script
 RUN echo '#!/bin/bash\n\
