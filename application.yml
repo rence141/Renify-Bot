@@ -9,6 +9,7 @@ lavalink:
       soundcloud: true
       twitch: true
       vimeo: true
+      spotify: true
       http: true
     
     bufferDurationMs: 400

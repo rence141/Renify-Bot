@@ -7,8 +7,8 @@ services:
     region: oregon
     dockerfilePath: Dockerfile
     dockerContext: .
-    dockerCommand: java -jar Lavalink.jar
-    healthCheckPath: /
+    dockerCommand: java -jar Lavalink.jar --spring.config.location=application.yml
+    healthCheckPath: /version
     envVars:
       - key: LAVALINK_HOST
         value: 0.0.0.0

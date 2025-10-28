@@ -36,14 +36,14 @@ COPY application.yml .
 RUN echo '#!/bin/bash\n\
 # Start Lavalink in background\n\
 echo "Starting Lavalink..."\n\
-java -jar Lavalink.jar &\n\
+java -jar Lavalink.jar --spring.config.location=application.yml &\n\
 LAVALINK_PID=$!\n\
 echo "Lavalink started with PID: $LAVALINK_PID"\n\
 \n\
-# Wait for Lavalink to be ready with more time and better checking\n\
+# Wait for Lavalink to be ready with HTTP check\n\
 echo "Waiting for Lavalink to start..."\n\
 for i in {1..60}; do\n\
-    if nc -z localhost 2333; then\n\
+    if curl -fsS http://lavalink:2333/version > /dev/null 2>&1; then\n\
         echo "Lavalink is ready on port 2333!"\n\
         # Give it a moment to fully initialize\n\
         sleep 3\n\
@@ -54,7 +54,7 @@ for i in {1..60}; do\n\
 done\n\
 \n\
 # Check if Lavalink is actually running\n\
-if ! nc -z localhost 2333; then\n\
+if ! curl -fsS http://lavalink:2333/version > /dev/null 2>&1; then\n\
     echo "ERROR: Lavalink failed to start on port 2333!"\n\
     echo "Lavalink process status:"\n\
     ps aux | grep java\n\
@@ -71,7 +71,7 @@ EXPOSE 2333
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD nc -z localhost 2333 || exit 1
+    CMD curl -fsS http://lavalink:2333/version || exit 1
 
 # Start both services
 CMD ["/app/start.sh"]

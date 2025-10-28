@@ -19,7 +19,7 @@ logger = logging.getLogger('RenifyBot')
 # It's best practice to use environment variables for sensitive info!
 # Use a .env file and a library like `python-dotenv` for local testing.
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN", "YOUR_BOT_TOKEN_HERE")
-LAVALINK_HOST = os.getenv("LAVALINK_HOST", "localhost")
+LAVALINK_HOST = os.getenv("LAVALINK_HOST", "lavalink")
 LAVALINK_PORT = int(os.getenv("LAVALINK_PORT", 2333))
 LAVALINK_PASSWORD = os.getenv("LAVALINK_PASSWORD", "renifythoushallnotpass")
 
